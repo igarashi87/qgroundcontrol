@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -588,11 +588,25 @@ FlightMap {
                         globals.guidedControllerFlyView.confirmAction(globals.guidedControllerFlyView.actionROI, clickMenu.coord, roiLocationItem)
                     }
                 }
+
+                // added by IG to run "set EKF origin"
+                QGCButton {
+                    Layout.fillWidth: true
+                    text: "set EKF origin"
+                    visible: globals.guidedControllerFlyView.showSetEkfOrigin
+                    onClicked: {
+                        if (clickMenu.opened) {
+                            clickMenu.close()
+                        }
+                        roiLocationItem.show(clickMenu.coord)
+                        globals.guidedControllerFlyView.confirmAction(globals.guidedControllerFlyView.actionSetEkfOrigin, clickMenu.coord, roiLocationItem)
+                    }
+                }
             }
         }
 
         onClicked: {
-            if (!globals.guidedControllerFlyView.guidedUIVisible && (globals.guidedControllerFlyView.showGotoLocation || globals.guidedControllerFlyView.showOrbit || globals.guidedControllerFlyView.showROI)) {
+            if (!globals.guidedControllerFlyView.guidedUIVisible && (globals.guidedControllerFlyView.showGotoLocation || globals.guidedControllerFlyView.showOrbit || globals.guidedControllerFlyView.showROI  || globals.guidedControllerFlyView.showSetEkfOrigin)) {
                 orbitMapCircle.hide()
                 gotoLocationItem.hide()
                 var clickCoord = _root.toCoordinate(Qt.point(mouse.x, mouse.y), false /* clipToViewPort */)
