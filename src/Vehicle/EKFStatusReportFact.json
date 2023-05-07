@@ -1,0 +1,43 @@
+{
+    "version":      1,
+    "fileType":  "FactMetaData",
+    "QGC.MetaData.Facts":
+[
+{
+    "name":             "velocity_variance",
+    "shortDesc":        "velocity_variance",
+    "type":             "float",
+    "decimalPlaces":    3
+},
+{
+    "name":             "pos_horiz_variance",
+    "shortDesc":        "pos_horiz_variance",
+    "type":             "float",
+    "decimalPlaces":    3
+},
+{
+    "name":             "pos_vert_variance",
+    "shortDesc":        "pos_vert_variance",
+    "type":             "float",
+    "decimalPlaces":    3
+},
+{
+    "name":             "compass_variance",
+    "shortDesc":        "compass_variance",
+    "type":             "float",
+    "decimalPlaces":    3
+},
+{
+    "name":             "terrain_alt_variance",
+    "shortDesc":        "terrain_alt_variance",
+    "type":             "float",
+    "decimalPlaces":    3
+},
+{
+    "name":             "airspeed_variance",
+    "shortDesc":        "airspeed_variance",
+    "type":             "float",
+    "decimalPlaces":    3
+}
+]
+}
