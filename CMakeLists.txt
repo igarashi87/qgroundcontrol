@@ -166,6 +166,7 @@ include_directories(
 	libs/mavlink/include/mavlink/v2.0
 	libs/mavlink/include/mavlink/v2.0/ardupilotmega
 	libs/mavlink/include/mavlink/v2.0/common
+	libs/mavlink/include/mavlink/v2.0/dronejapan
 
 	libs/shapelib
 )
