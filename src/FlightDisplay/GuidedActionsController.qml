@@ -58,6 +58,7 @@ Item {
     readonly property string actionListTitle:               qsTr("Action")
     readonly property string setEkfOriginTitle:             qsTr("Set EKF origin")  // added by IG to run "set EKF origin"
     readonly property string droneIsHereTitle:              qsTr("DroneIsHere")
+    readonly property string droneDirectionTitle:           qsTr("Drone Direction")
 
     readonly property string armMessage:                        qsTr("Arm the vehicle.")
     readonly property string forceArmMessage:                   qsTr("WARNING: This will force arming of the vehicle bypassing any safety checks.")
@@ -83,6 +84,7 @@ Item {
     readonly property string roiMessage:                        qsTr("Make the specified location a Region Of Interest.")
     readonly property string setEkfOriginMessage:               qsTr("Make the specified location the EKF origin.")   // added by IG to run "set EKF origin"
     readonly property string droneIsHereMessage:                qsTr("Drone is here.")
+    readonly property string droneDirectionMessage:             qsTr("Drone Direction.")
 
     readonly property int actionRTL:                        1
     readonly property int actionLand:                       2
@@ -111,6 +113,7 @@ Item {
     readonly property int actionChangeSpeed:                25
     readonly property int actionSetEkfOrigin:               26   // added by IG to run "set EKF origin"
     readonly property int actionDroneIsHere:                27
+    readonly property int actionDroneDirection:             28
 
     property var    _activeVehicle:             QGroundControl.multiVehicleManager.activeVehicle
     property bool   _useChecklist:              QGroundControl.settingsManager.appSettings.useChecklist.rawValue && QGroundControl.corePlugin.options.preFlightChecklistUrl.toString().length
@@ -138,6 +141,7 @@ Item {
     property bool showGotoLocation:     _guidedActionsEnabled && _vehicleFlying
     property bool showSetEkfOrigin:     true // added by IG to run "set EKF origin"
     property bool showDroneIsHere:      true
+    property bool showDroneDirection:   true
     property bool showActionList:       _guidedActionsEnabled && (showStartMission || showResumeMission || showChangeAlt || showLandAbort || actionList.hasCustomActions)
     property string changeSpeedTitle:   _fixedWing ? changeAirspeedTitle : changeCruiseSpeedTitle
     property string changeSpeedMessage: _fixedWing ? changeAirspeedMessage : changeCruiseSpeedMessage
@@ -514,6 +518,11 @@ Item {
             confirmDialog.message = droneIsHereMessage
             confirmDialog.hideTrigger = true
             break
+        case actionDroneDirection:
+            confirmDialog.title = droneDirectionTitle
+            confirmDialog.message = droneDirectionMessage
+            confirmDialog.hideTrigger = true
+            break
         default:
             console.warn("Unknown actionCode", actionCode)
             return
@@ -608,6 +617,9 @@ Item {
             break
         case actionDroneIsHere:
             _activeVehicle.droneIsHere(actionData)
+            break
+        case actionDroneDirection:
+            _activeVehicle.droneDirection(actionData)
             break
         default:
             console.warn(qsTr("Internal error: unknown actionCode"), actionCode)

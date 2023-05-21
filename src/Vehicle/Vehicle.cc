@@ -13,6 +13,7 @@
 #include <QQuaternion>
 
 #include <Eigen/Eigen>
+#include <cmath>
 
 #include "Vehicle.h"
 #include "MAVLinkProtocol.h"
@@ -2887,7 +2888,14 @@ void Vehicle::droneIsHere(const QGeoCoordinate& centerCoord)
         return;
     }
 
+    //if (!_existDirection) {
+    //    qCDebug(VehicleLog) << "set the :Drone Direction!";
+    //    return;
+    //}
+
     convertGeoToNed(centerCoord, _lastCoord, &offsetY, &offsetX, &offsetZ);
+    convertGeoToNed(_directionCoord, centerCoord, &directionY, &directionX, &directionZ);
+    offsetYaw = atan2(directionX, directionY);
     sendMavCommand(
                 defaultComponentId(),
                 static_cast<MAV_CMD>(2530),     // Amend to appropriate format at a later date.
@@ -2897,7 +2905,7 @@ void Vehicle::droneIsHere(const QGeoCoordinate& centerCoord)
                 offsetZ,                        // offset z (meter)
                 static_cast<float>(qQNaN()),    // reserved
                 static_cast<float>(qQNaN()),    // reserved
-                static_cast<float>(1.57),       // offset yaw (radian)
+                static_cast<float>(offsetYaw),  // offset yaw (radian)
                 static_cast<float>(qQNaN()));   // reserved
 
     //sendMavCommand(
@@ -2911,6 +2919,17 @@ void Vehicle::droneIsHere(const QGeoCoordinate& centerCoord)
     //            centerCoord.longitude(),    // reserved
     //            centerCoord.altitude(),       // offset yaw (radian)
     //            static_cast<float>(qQNaN()));   // reserved
+}
+
+void Vehicle::droneDirection(const QGeoCoordinate& centerCoord)
+{
+    SharedLinkInterfacePtr sharedLink = vehicleLinkManager()->primaryLink().lock();
+    if (!sharedLink) {
+        qCDebug(VehicleLog) << "setCurrentMissionSequence: primary link gone!";
+        return;
+    }
+    _directionCoord = centerCoord;
+    _existDirection = true;
 }
 
 void Vehicle::pauseVehicle()

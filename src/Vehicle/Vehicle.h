@@ -400,6 +400,7 @@ public:
     /// Command vehicle to send SET_GPS_GLOBAL_ORIGIN, added by IG
     Q_INVOKABLE void setEkfOrigin(const QGeoCoordinate& centerCoord);
     Q_INVOKABLE void droneIsHere(const QGeoCoordinate& centerCoord);
+    Q_INVOKABLE void droneDirection(const QGeoCoordinate& centerCoord);
 
     /// Command vehicle to pause at current location. If vehicle supports guide mode, vehicle will be left
     /// in guided mode after pause.
@@ -1153,10 +1154,18 @@ private:
     bool            _allSensorsHealthy                      = true;
 
     // added by IG
+    bool           _existEkfOrigin                         = false;
     QGeoCoordinate _lastCoord;
     double offsetX;
     double offsetY;
     double offsetZ;
+    double offsetYaw;
+
+    QGeoCoordinate _directionCoord;
+    bool           _existDirection                         = false;
+    double directionX;
+    double directionY;
+    double directionZ;
 
 
     SysStatusSensorInfo _sysStatusSensorInfo;

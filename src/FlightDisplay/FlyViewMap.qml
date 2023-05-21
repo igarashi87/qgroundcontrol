@@ -512,6 +512,34 @@ FlightMap {
         }
     }
 
+    // drone direction item for "drone is here"
+    MapQuickItem {
+        id:             droneDirectionItem
+        visible:        _activeVehicle
+        z:              QGroundControl.zOrderMapItems
+        anchorPoint.x:  sourceItem.anchorPointX
+        anchorPoint.y:  sourceItem.anchorPointY
+        sourceItem: MissionItemIndexLabel {
+            checked:    true
+            index:      -1
+            label:      qsTr("Drone Direction", "Direction the drone is facing.")
+        }
+
+        //-- Visibilty controlled by actual state
+        function show(coord) {
+            droneDirectionItem.coordinate = coord
+        }
+
+        function hide() {
+        }
+
+        function actionConfirmed() {
+        }
+
+        function actionCancelled() {
+        }
+    }
+
 
     // Handle guided mode clicks
     MouseArea {
@@ -616,11 +644,25 @@ FlightMap {
                         globals.guidedControllerFlyView.confirmAction(globals.guidedControllerFlyView.actionDroneIsHere, clickMenu.coord, roiLocationItem)
                     }
                 }
+
+                // Drone direction for "Drone is here"
+                QGCButton {
+                    Layout.fillWidth: true
+                    text: "Drone Direction"
+                    visible: globals.guidedControllerFlyView.showDroneDirection
+                    onClicked: {
+                        if (clickMenu.opened) {
+                            clickMenu.close()
+                        }
+                        droneDirectionItem.show(clickMenu.coord)
+                        globals.guidedControllerFlyView.confirmAction(globals.guidedControllerFlyView.actionDroneDirection, clickMenu.coord, droneDirectionItem)
+                    }
+                }
             }
         }
 
         onClicked: {
-            if (!globals.guidedControllerFlyView.guidedUIVisible && (globals.guidedControllerFlyView.showGotoLocation || globals.guidedControllerFlyView.showOrbit || globals.guidedControllerFlyView.showROI  || globals.guidedControllerFlyView.showSetEkfOrigin  || globals.guidedControllerFlyView.showDroneIsHere)) {
+            if (!globals.guidedControllerFlyView.guidedUIVisible && (globals.guidedControllerFlyView.showGotoLocation || globals.guidedControllerFlyView.showOrbit || globals.guidedControllerFlyView.showROI || globals.guidedControllerFlyView.showSetEkfOrigin || globals.guidedControllerFlyView.showDroneIsHere || globals.guidedControllerFlyView.showDroneDirection)) {
                 orbitMapCircle.hide()
                 gotoLocationItem.hide()
                 var clickCoord = _root.toCoordinate(Qt.point(mouse.x, mouse.y), false /* clipToViewPort */)
