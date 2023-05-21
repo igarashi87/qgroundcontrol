@@ -2862,6 +2862,11 @@ void Vehicle::setEkfOrigin(const QGeoCoordinate& centerCoord)
         qCDebug(VehicleLog) << "setCurrentMissionSequence: primary link gone!";
         return;
     }
+
+    _lastCoord.setLatitude(centerCoord.latitude());
+    _lastCoord.setLongitude(centerCoord.longitude());
+    _lastCoord.setLatitude(centerCoord.altitude());
+
     mavlink_message_t msg;
     mavlink_msg_set_gps_global_origin_pack_chan(
         _mavlink->getSystemId(),
@@ -2875,6 +2880,28 @@ void Vehicle::setEkfOrigin(const QGeoCoordinate& centerCoord)
         static_cast<float>(qQNaN())
     );
     sendMessageOnLinkThreadSafe(sharedLink.get(), msg);
+}
+
+void Vehicle::droneIsHere(const QGeoCoordinate& centerCoord)
+{
+    SharedLinkInterfacePtr sharedLink = vehicleLinkManager()->primaryLink().lock();
+    if (!sharedLink) {
+        qCDebug(VehicleLog) << "setCurrentMissionSequence: primary link gone!";
+        return;
+    }
+
+    convertGeoToNed(centerCoord, _lastCoord, &offsetX, &offsetY, &offsetZ);
+    sendMavCommand(
+                defaultComponentId(),
+                static_cast<MAV_CMD>(2530),     // Amend to appropriate format at a later date.
+                true,                           // show error if fails
+                offsetX,                        // offset x (meter)
+                offsetY,                        // offset y (meter)
+                offsetZ,                        // offset z (meter)
+                static_cast<float>(qQNaN()),    // reserved
+                static_cast<float>(qQNaN()),    // reserved
+                static_cast<float>(1.57),       // offset yaw (radian)
+                static_cast<float>(qQNaN()));   // reserved
 }
 
 void Vehicle::pauseVehicle()

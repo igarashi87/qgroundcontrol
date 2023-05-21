@@ -601,12 +601,26 @@ FlightMap {
                         roiLocationItem.show(clickMenu.coord)
                         globals.guidedControllerFlyView.confirmAction(globals.guidedControllerFlyView.actionSetEkfOrigin, clickMenu.coord, roiLocationItem)
                     }
+                }                
+
+                // To run "Drone is here"
+                QGCButton {
+                    Layout.fillWidth: true
+                    text: "Drone is here"
+                    visible: globals.guidedControllerFlyView.showDroneIsHere
+                    onClicked: {
+                        if (clickMenu.opened) {
+                            clickMenu.close()
+                        }
+                        roiLocationItem.show(clickMenu.coord)
+                        globals.guidedControllerFlyView.confirmAction(globals.guidedControllerFlyView.actionDroneIsHere, clickMenu.coord, roiLocationItem)
+                    }
                 }
             }
         }
 
         onClicked: {
-            if (!globals.guidedControllerFlyView.guidedUIVisible && (globals.guidedControllerFlyView.showGotoLocation || globals.guidedControllerFlyView.showOrbit || globals.guidedControllerFlyView.showROI  || globals.guidedControllerFlyView.showSetEkfOrigin)) {
+            if (!globals.guidedControllerFlyView.guidedUIVisible && (globals.guidedControllerFlyView.showGotoLocation || globals.guidedControllerFlyView.showOrbit || globals.guidedControllerFlyView.showROI  || globals.guidedControllerFlyView.showSetEkfOrigin  || globals.guidedControllerFlyView.showDroneIsHere)) {
                 orbitMapCircle.hide()
                 gotoLocationItem.hide()
                 var clickCoord = _root.toCoordinate(Qt.point(mouse.x, mouse.y), false /* clipToViewPort */)
