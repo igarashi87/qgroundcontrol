@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  * (c) 2009-2020 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -24,7 +24,7 @@
 #include "MapboxMapProvider.h"
 #include "ElevationMapProvider.h"
 
-#define MAX_MAP_ZOOM (23.0)
+#define MAX_MAP_ZOOM (24.0)
 
 class UrlFactory : public QObject {
     Q_OBJECT
