@@ -1159,14 +1159,16 @@ private:
     double offsetX;
     double offsetY;
     double offsetZ;
-    double offsetYaw;
+    float offsetYaw;
 
     QGeoCoordinate _directionCoord;
     bool           _existDirection                         = false;
     double directionX;
     double directionY;
     double directionZ;
-
+    int offset_cmd = 2530;
+    MultiVehicleManager*    vehicleMgr;
+    Vehicle*                vehicle;
 
     SysStatusSensorInfo _sysStatusSensorInfo;
 

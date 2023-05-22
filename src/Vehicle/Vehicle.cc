@@ -2882,43 +2882,28 @@ void Vehicle::setEkfOrigin(const QGeoCoordinate& centerCoord)
 
 void Vehicle::droneIsHere(const QGeoCoordinate& centerCoord)
 {
-    SharedLinkInterfacePtr sharedLink = vehicleLinkManager()->primaryLink().lock();
-    if (!sharedLink) {
-        qCDebug(VehicleLog) << "setCurrentMissionSequence: primary link gone!";
-        return;
-    }
-
     //if (!_existDirection) {
     //    qCDebug(VehicleLog) << "set the :Drone Direction!";
     //    return;
     //}
+    //vehicleMgr  = qgcApp()->toolbox()->multiVehicleManager();
+    //vehicle     = vehicleMgr->activeVehicle();
 
-    convertGeoToNed(centerCoord, _lastCoord, &offsetY, &offsetX, &offsetZ);
+    convertGeoToNed(centerCoord, _lastCoord, &offsetX, &offsetY, &offsetZ);
     convertGeoToNed(_directionCoord, centerCoord, &directionY, &directionX, &directionZ);
-    offsetYaw = atan2(directionX, directionY);
-    sendMavCommand(
-                defaultComponentId(),
-                static_cast<MAV_CMD>(2530),     // Amend to appropriate format at a later date.
-                true,                           // show error if fails
-                offsetX,                        // offset x (meter)
-                offsetY,                        // offset y (meter)
-                offsetZ,                        // offset z (meter)
-                static_cast<float>(qQNaN()),    // reserved
-                static_cast<float>(qQNaN()),    // reserved
-                static_cast<float>(offsetYaw),  // offset yaw (radian)
-                static_cast<float>(qQNaN()));   // reserved
+    offsetYaw = (float) atan2(directionX, directionY);
 
-    //sendMavCommand(
-    //            defaultComponentId(),
-    //            static_cast<MAV_CMD>(2530),     // Amend to appropriate format at a later date.
-    //            true,                           // show error if fails
-    //            _lastCoord.latitude(),                        // offset x (meter)
-    //            _lastCoord.longitude(),                        // offset y (meter)
-    //            _lastCoord.altitude(),                        // offset z (meter)
-    //            centerCoord.latitude(),    // reserved
-    //            centerCoord.longitude(),    // reserved
-    //            centerCoord.altitude(),       // offset yaw (radian)
-    //            static_cast<float>(qQNaN()));   // reserved
+    sendMavCommand(
+                   defaultComponentId(),
+                   static_cast<MAV_CMD>(offset_cmd),       // Amend to appropriate format at a later date.
+                   true,                                   // show error if fails
+                   static_cast<float>((float) offsetX),    // offset x (meter)
+                   static_cast<float>((float) offsetY),    // offset y (meter)
+                   static_cast<float>((float) offsetZ),    // offset z (meter)
+                   static_cast<float>(0.0f),               // reserved
+                   static_cast<float>(0.0f),               // reserved
+                   static_cast<float>(offsetYaw),          // offset yaw (radian)
+                   static_cast<float>(0.0f));              // reserved
 }
 
 void Vehicle::droneDirection(const QGeoCoordinate& centerCoord)
